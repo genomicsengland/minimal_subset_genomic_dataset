@@ -45,7 +45,7 @@ process subset_vcf {
 
     script:
     """
-    bcftools view -r ${region_file} ${vcf} -Oz -o ${file_name}_subset.vcf.gz
+    bcftools view -R ${region_file} ${vcf} -Oz -o ${file_name}_subset.vcf.gz
     bcftools index ${file_name}_subset.vcf.gz
     """
   }
