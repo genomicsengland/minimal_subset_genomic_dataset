@@ -20,7 +20,7 @@ process copy_vcf {
     publishDir "${params.outdir}/copy", mode: 'copy'
 
     input:
-    set val(file_name), file(vcf), file(vcf_idx) from ch_input
+    set val(file_name), file(vcf), file(vcf_idx) from ch_input_list
     
     output:
     set val(file_name), file("${file_name}_copy.vcf.gz"), file("${file_name}_copy.vcf.gz.csi") into ch_copied
