@@ -17,7 +17,7 @@ Channel
 // Define Process
 process copy_vcf {
     tag "$file_name"
-    publishDir "${params.outdir}/copy", mode: 'copy'
+    publishDir "${params.outdir}/copy", mode: 'copy', pattern: '*_copy.vcf*'
 
     input:
     set val(file_name), file(vcf), file(vcf_idx) from ch_input_list
@@ -34,7 +34,7 @@ process copy_vcf {
 
 process subset_vcf {
     tag "$file_name"
-    publishDir "${params.outdir}/subset", mode: 'copy'
+    publishDir "${params.outdir}/subset", mode: 'copy', pattern: '*_subset.vcf*'
 
     input:
     set val(file_name), file(vcf), file(vcf_idx) from ch_copied
