@@ -15,29 +15,29 @@ Channel
     .set { ch_region_file }
 
 // Define Process
-process copy_vcf {
+process reformat_vcf {
     tag "$file_name"
-    publishDir "${params.outdir}/copy", mode: 'copy', pattern: '*_copy.vcf*'
+    publishDir "${params.outdir}/copy", mode: 'copy'
 
     input:
     set val(file_name), file(vcf), file(vcf_idx) from ch_input_list
     
     output:
-    set val(file_name), file("${file_name}_copy.vcf.gz"), file("${file_name}_copy.vcf.gz.csi") into ch_copied
+    set val(file_name), file("${file_name}_reformat.bcf.gz"), file("${file_name}_reformat.bcf.gz.csi") into ch_reformatted
     
     script:
     """
-    cp ${vcf} ${file_name}_copy.vcf.gz
-    cp ${vcf_idx} ${file_name}_copy.vcf.gz.csi
+    bcftools view ${vcf} -Ob -o ${file_name}_reformat.bcf.gz
+    bcftools index ${file_name}_reformat.bcf.gz
     """
   }
 
-process subset_vcf {
+process subset_bcf {
     tag "$file_name"
-    publishDir "${params.outdir}/subset", mode: 'copy', pattern: '*_subset.vcf*'
+    publishDir "${params.outdir}/subset", mode: 'copy'
 
     input:
-    set val(file_name), file(vcf), file(vcf_idx) from ch_copied
+    set val(file_name), file(bcf), file(bcf_idx) from ch_reformatted
     each file(region_file) from ch_region_file
 
     output:
@@ -45,7 +45,7 @@ process subset_vcf {
 
     script:
     """
-    bcftools view -R ${region_file} ${vcf} -Oz -o ${file_name}_subset.vcf.gz
+    bcftools view -R ${region_file} ${bcf} -Oz -o ${file_name}_subset.vcf.gz
     bcftools index ${file_name}_subset.vcf.gz
     """
   }
