@@ -17,7 +17,7 @@ Channel
 // Define Process
 process reformat_vcf {
     tag "$file_name"
-    publishDir "${params.outdir}/copy", mode: 'copy'
+    publishDir "${params.outdir}/reformat", mode: 'copy'
 
     input:
     set val(file_name), file(vcf), file(vcf_idx) from ch_input_list
