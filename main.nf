@@ -14,8 +14,11 @@ Channel
     .ifEmpty { exit 1, "Cannot find input file : ${params.region_file_location}" }
     .set { ch_region_file }
 
-// Define Process
-if (!params.skip_reformat) {
+// Define Processes
+if (params.skip_reformat) {
+    ch_reformatted = ch_input_list
+}
+else {
     process reformat {
         tag "$file_name"
         publishDir "${params.outdir}/reformat", mode: 'copy'
@@ -53,4 +56,3 @@ process subset {
     rm -f ${input_file} ${input_file_idx} ${region_file}
     """
 }
-
