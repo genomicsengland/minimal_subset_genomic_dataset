@@ -29,6 +29,7 @@ process reformat_vcf {
     """
     bcftools view ${vcf} -Ob -o ${file_name}_reformat.bcf.gz
     bcftools index ${file_name}_reformat.bcf.gz
+    rm -f ${vcf} ${vcf_idx}
     """
   }
 
@@ -47,6 +48,7 @@ process subset_bcf {
     """
     bcftools view -T ${region_file} ${bcf} -Oz -o ${file_name}_subset.vcf.gz
     bcftools index ${file_name}_subset.vcf.gz
+    rm -f ${bcf} ${bcf_idx} ${region_file}
     """
   }
 
